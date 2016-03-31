@@ -11,6 +11,14 @@
     },
     {
       "type": "kendo-ui-mobile:view",
+      "name": "bolsView",
+      "components": [],
+      "title": "View Bols",
+      "addToNavigation": true,
+      "icon": "home"
+    },
+    {
+      "type": "kendo-ui-mobile:view",
       "name": "settingsView",
       "components": [],
       "title": "Settings",

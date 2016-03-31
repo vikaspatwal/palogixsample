@@ -21,7 +21,7 @@
             }
 
             var element = document.getElementById('appDrawer');
-            if (typeof(element) != 'undefined' && element !== null) {
+            if (typeof(element) !== 'undefined' && element !== null) {
                 if (window.navigator.msPointerEnabled) {
                     $('#navigation-container').on('MSPointerDown', 'a', function(event) {
                         app.keepActiveState($(this));
