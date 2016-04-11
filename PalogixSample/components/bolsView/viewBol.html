@@ -1,34 +1,34 @@
-<div id="viewBol" 
-     data-role="view" data-style="inset" 
-     data-title="Bol" data-show="singleCardShow" data-init="singleCardInit" data-model="singleCardViewModel">
-    <header data-role="header" data-id="jitterz-default-header">
+<div id="singleBolView" data-layout="main" data-role="view" data-style="inset" data-title="BOL" data-init="singleBolInit" >
+    <header data-role="header">
         <div data-role="navbar">
             <a class="nav-button" data-role="backbutton" data-align="left">Back</a>
+            <span data-role="view-title"></span>
         </div>
     </header>
     <div>
-        <div id="cardFront">
-            <div class="card-icon">
-                <div class="j-icon main-badge"></div>
+        <div id="bolView">
+            
+            <div class="bolTemplateView">
+                <div style="display: inline-block; width:50%;">Bol ID:</div>
+                <div style="display: inline-block;">Status:</div>
+             </div>
+            <div class="bolTemplateView">
+                <div style="display: inline-block; width:50%;">From:</div>
+                <div style="display: inline-block;">To:</div>
             </div>
-            <div class="card-bonus">
-                <span data-bind="text: bolid"></span>
-                <div>
-                    <span>status</span>
-                    <span data-bind="text: status"></span>
-                </div>
+            <div class="container-name">
+                <div style="display: inline-block; width:50%;">Out Dt:</div>
+                <div style="display: inline-block;">In Dt:</div>
             </div>
-            <div class="card-line">
-                <span data-bind="text: InDate"></span>
-            </div>
+            
         </div>
-        <div id="cardBack">
+        <div id="scanBins">
             <img id="barcodeImage" alt="Scan BINS"/>
         </div>
-        <ul data-role="actionsheet" class="singleCardActionsList" id="singleCardActions" data-popup='{"direction": "left"}'>
+        <!--ul data-role="actionsheet" class="singleCardActionsList" id="singleCardActions" data-popup='{"direction": "left"}'>
             <li>
                 <a href="#" data-role="button" data-bind="events: { click : deleteCard }" class="singleCardDeleteButton">Delete</a>
             </li>
-        </ul>
+        </ul-->
     </div>
 </div>

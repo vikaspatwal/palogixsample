@@ -1,5 +1,10 @@
 'use strict';
 
+var serverURL = "http://palogix.stigasoft.biz/";
+    var accessToken = "";
+    var authString = "YXBpdXNlcjphcGlwYXNz";
+    var contentType = "application/json";
+
 app.bolsView = kendo.observable({
     onShow: function() {},
     afterShow: function() {}
@@ -8,49 +13,116 @@ app.bolsView = kendo.observable({
 // START_CUSTOM_CODE_contactsView
 // Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes
 (function () {
-    app.bolsView.set('title', 'Bols');
 
-/*    var authSource = new kendo.data.DataSource({
+   
+    var authSource = new kendo.data.DataSource({
       transport: {
         read:  {
-          url: "http://palogix.stigasoft.biz/api/doAuth",
-          dataType: "jsonp", // "jsonp" is required for cross-domain requests; use "json" for same-domain requests
-          type : 'POST'
+          url: serverURL + "api/doAuth",
+          type : "POST",
+          beforeSend: function (req) {
+                    req.setRequestHeader('Content-Type', contentType);
+                    req.setRequestHeader('Authorization', "Basic " + authString);
+              }
         },
       },
-    });
-    
-    alert(JSON.stringify(authSource.read()));
-    */
-    var dataSource = new kendo.data.DataSource({
-      transport: {
-        read:  {
-          url: "http://demos.telerik.com/kendo-ui/service/products",
-          dataType: "jsonp"/*, // "jsonp" is required for cross-domain requests; use "json" for same-domain requests
-          data: { number: selectedCell[0] }*/
-        },
-      },
-      schema: {
+      schema : {
+        type: "json",
         model: {
-                id: "ProductID",
-                fields: {
-                        "ProductName": {
-                            type: "string"
-                        },
-                        "UnitPrice": {
-                            type: "number"
-                        },
-                        "UnitsInStock": {
-                                type: "number"
-                            },
-                    }
-            
-               }
+            fields: {
+                response_code: {type: "string" },
+                msg: [
+                         { access_token : { type: "string" } }
+                     ]
+            }  
+        }
       }
     });
     
-    app.bolsView.set('dataSource', dataSource);
+    authSource = new kendo.data.DataSource({
+      transport: {
+        read:  {
+          url: serverURL + "api/doAuth",
+          type : "POST",
+          beforeSend: function (req) {
+                    req.setRequestHeader('Content-Type', contentType);
+                    req.setRequestHeader('Authorization', "Basic " + authString);
+              }
+        },
+      },
+      schema : {
+        type: "json",
+        model: {
+            fields: {
+                response_code: {type: "string" },
+                msg: [
+                         { access_token : { type: "string" } }
+                     ]
+            }  
+        }
+      }
+    });
+    
+    authSource.fetch(function(){
+      var view = authSource.view();
+      accessToken = view[0].msg.access_token; // displays "Jane Doe"
+    });
+   
+    
+    
+    //alert(authSource.read());
+    
+     var bolSource = new kendo.data.DataSource({
+      transport: {
+        read:  {
+          url: serverURL + "api/getAllBol",
+          type : "GET",
+          beforeSend: function (req) {
+                    req.setRequestHeader('Content-Type', contentType);
+                    req.setRequestHeader('Authorization', "Bearer " + accessToken);
+              }
+        },
+      },
+      schema : {
+        data: "msg.data"
+      }
+    });
+    
+    app.bolsView.set('dataSource', bolSource);
     
   
 })();
+
+
+function singleBolInit(e)
+{
+    var bolid = e.view.params.id; 
+    var singleBolSource = new kendo.data.DataSource({
+      transport: {
+        read:  {
+          url: serverURL + "api/getBol/" + bolid,
+          type : "GET",
+          beforeSend: function (req) {
+                    req.setRequestHeader('Content-Type', contentType);
+                    req.setRequestHeader('Authorization', "Bearer " + accessToken);
+              }
+        },
+      },
+      schema : {
+          data: function(data) {              // the data which the data source will be bound to is in the values field
+                console.log(data.msg.data);
+                return data.msg.data;
+            }
+      }
+    });
+    console.log(bolid);
+    console.log(singleBolSource);
+    
+    singleBolSource.fetch(function(){
+
+            console.log(singleBolSource);
+    });
+   
+    
+}
 // END_CUSTOM_CODE_contactsView

@@ -8,21 +8,25 @@
 }
 </script>
 
-<div data-role="view" data-title="View Bols" data-layout="main" data-model="app.bolsView" data-show="app.bolsView.onShow" data-after-show="app.bolsView.afterShow">
+<div data-role="view" data-title="BOLs List" data-layout="main" data-model="app.bolsView" data-show="app.bolsView.onShow" data-after-show="app.bolsView.afterShow">
     <!-- START_CUSTOM_CODE_contactsView -->
     <!-- Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes -->
     <ul data-role="listview" data-style="inset" data-template="bolsTemplate" data-bind="source: dataSource"></ul>
         
     <!-- this is the template used by the listview. template items are automatically wrapped in an <li> by Kendo UI Mobile -->
     <script type="text/x-kendo-template" id="bolsTemplate">
-        <a href='components/bolsView/viewBol.html?bolid=#:data.id#&InDate=#:data.ProductName#&Status=#:data.UnitPrice#&OutDate=#:data.UnitsInStock#'>
+        <a href='components/bolsView/viewBol.html?id=#:data.id#'>
             <div class="bolTemplateView">
                 <div style="display: inline-block; width:50%;">Bol ID: #: data.id #</div>
-                <div style="display: inline-block;">In Date: #: data.ProductName #</div>
+                <div style="display: inline-block;">Status: #: data.status #</div>
              </div>
+            <div class="bolTemplateView">
+                <div style="display: inline-block; width:50%;">Fr: #: data.from_biz_id #</div>
+                <div style="display: inline-block;">To: #: data.to_biz_id #</div>
+            </div>
             <div class="container-name">
-                <div style="display: inline-block; width:50%;">Status: #: data.UnitPrice #</div>
-                <div style="display: inline-block;">Out Date: #: data.UnitsInStock #</div>
+                <div style="display: inline-block; width:50%;">Out Dt: #: data.out_date #</div>
+                <div style="display: inline-block;">In Dt: #: data.in_date #</div>
             </div>
         </a>
     </script>
