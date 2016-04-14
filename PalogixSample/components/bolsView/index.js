@@ -6,72 +6,54 @@ var serverURL = "http://palogix.stigasoft.biz/";
     var contentType = "application/json";
 
 app.bolsView = kendo.observable({
-    onShow: function() {},
-    afterShow: function() {}
+    onShow: function() {loadBolList()}
 });
+
+app.singleBolView = kendo.observable({
+});
+
+app.bolBinsView = kendo.observable({
+});
+
 
 // START_CUSTOM_CODE_contactsView
 // Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes
 (function () {
+   
+       var authSource = new kendo.data.DataSource({
+          transport: {
+            read:  {
+              url: serverURL + "api/doAuth",
+              type : "POST",
+              beforeSend: function (req) {
+                        req.setRequestHeader('Content-Type', contentType);
+                        req.setRequestHeader('Authorization', "Basic " + authString);
+                  }
+            },
+          },
+          schema : {
+            type: "json",
+            model: {
+                fields: {
+                    response_code: {type: "string" },
+                    msg: [
+                             { access_token : { type: "string" } }
+                         ]
+                }  
+            }
+          }
+        });
+        
+        authSource.fetch(function(){
+          var view = authSource.view();
+          accessToken = view[0].msg.access_token; // displays "Jane Doe"
+        });
+  
+})();
 
-   
-    var authSource = new kendo.data.DataSource({
-      transport: {
-        read:  {
-          url: serverURL + "api/doAuth",
-          type : "POST",
-          beforeSend: function (req) {
-                    req.setRequestHeader('Content-Type', contentType);
-                    req.setRequestHeader('Authorization', "Basic " + authString);
-              }
-        },
-      },
-      schema : {
-        type: "json",
-        model: {
-            fields: {
-                response_code: {type: "string" },
-                msg: [
-                         { access_token : { type: "string" } }
-                     ]
-            }  
-        }
-      }
-    });
-    
-    authSource = new kendo.data.DataSource({
-      transport: {
-        read:  {
-          url: serverURL + "api/doAuth",
-          type : "POST",
-          beforeSend: function (req) {
-                    req.setRequestHeader('Content-Type', contentType);
-                    req.setRequestHeader('Authorization', "Basic " + authString);
-              }
-        },
-      },
-      schema : {
-        type: "json",
-        model: {
-            fields: {
-                response_code: {type: "string" },
-                msg: [
-                         { access_token : { type: "string" } }
-                     ]
-            }  
-        }
-      }
-    });
-    
-    authSource.fetch(function(){
-      var view = authSource.view();
-      accessToken = view[0].msg.access_token; // displays "Jane Doe"
-    });
-   
-    
-    
-    //alert(authSource.read());
-    
+
+function loadBolList()
+{
      var bolSource = new kendo.data.DataSource({
       transport: {
         read:  {
@@ -89,14 +71,15 @@ app.bolsView = kendo.observable({
     });
     
     app.bolsView.set('dataSource', bolSource);
-    
-  
-})();
+        
+}
 
-
-function singleBolInit(e)
+function loadSingleBol(e)
 {
+    alert('load');
     var bolid = e.view.params.id; 
+    var template = kendo.template($("#bolTemplate").html()); //create template
+   
     var singleBolSource = new kendo.data.DataSource({
       transport: {
         read:  {
@@ -109,20 +92,54 @@ function singleBolInit(e)
         },
       },
       schema : {
-          data: function(data) {              // the data which the data source will be bound to is in the values field
-                console.log(data.msg.data);
-                return data.msg.data;
+        type: "json",
+        data: "msg.data",
+        model: {
+            fields: {
+                id: { field: "id", type: "string" },
+                status: { field: "status", type: "string" },
+                from_biz_id: { field: "from_biz_id", type: "string" },
+                to_biz_id: { field: "to_biz_id", type: "string" },
+                out_date: { field: "out_date", type: "string" },
+                in_date: { field: "in_date", type: "string" }
             }
+        }
+      },
+      change: function() {
+            $("#bolView").html(kendo.render(template, this.view())); // populate the content
       }
     });
-    console.log(bolid);
-    console.log(singleBolSource);
     
-    singleBolSource.fetch(function(){
+    singleBolSource.fetch();
+    loadBolBins(bolid);
+}
 
-            console.log(singleBolSource);
+function loadBolBins(bolid)
+{
+    var template = kendo.template($("#bolBinsTemplate").html()); //create template
+    
+    var bolSource = new kendo.data.DataSource({
+      transport: {
+        read:  {
+          url: serverURL + "api/getBolBinDetails/" + bolid,
+          type : "GET", 
+          beforeSend: function (req) {
+                    req.setRequestHeader('Content-Type', contentType);
+                    req.setRequestHeader('Authorization', "Bearer " + accessToken);
+              }
+        },
+      },
+      schema : {
+        type: "json",
+        data: "msg.data"
+      },
+      change: function() {
+            $("#bolBinView").html(kendo.render(template, this.view())); // populate the content
+      }
     });
-   
+    bolSource.fetch();
+//    app.bolBinsView.set('dataSourceBolBin', bolSource);
     
 }
+
 // END_CUSTOM_CODE_contactsView

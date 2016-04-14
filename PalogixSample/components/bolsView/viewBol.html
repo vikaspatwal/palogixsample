@@ -1,34 +1,35 @@
-<div id="singleBolView" data-layout="main" data-role="view" data-style="inset" data-title="BOL" data-init="singleBolInit" >
+<div id="singleBolView" data-layout="main" data-role="view" data-style="inset" data-title="BOL" data-show="loadSingleBol" data-model="app.singleBolView" >
     <header data-role="header">
         <div data-role="navbar">
             <a class="nav-button" data-role="backbutton" data-align="left">Back</a>
             <span data-role="view-title"></span>
         </div>
     </header>
-    <div>
-        <div id="bolView">
-            
+    
+    <div id="bolView"></div>
+    <div id="bolBinView"></div>
+    
+    <script type="text/x-kendo-template" id="bolTemplate">
             <div class="bolTemplateView">
-                <div style="display: inline-block; width:50%;">Bol ID:</div>
-                <div style="display: inline-block;">Status:</div>
+                <div style="display: inline-block; width:50%;">Bol ID: #: data.id #</div>
+                <div style="display: inline-block;">Status: #: data.status #</div>
              </div>
             <div class="bolTemplateView">
-                <div style="display: inline-block; width:50%;">From:</div>
-                <div style="display: inline-block;">To:</div>
+                <div style="display: inline-block; width:50%;">Fr: #: data.from_biz_id #</div>
+                <div style="display: inline-block;">To: #: data.to_biz_id #</div>
             </div>
             <div class="container-name">
-                <div style="display: inline-block; width:50%;">Out Dt:</div>
-                <div style="display: inline-block;">In Dt:</div>
+                <div style="display: inline-block; width:50%;">Out Dt: #: data.out_date #</div>
+                <div style="display: inline-block;">In Dt: #: data.in_date #</div>
             </div>
-            
-        </div>
-        <div id="scanBins">
-            <img id="barcodeImage" alt="Scan BINS"/>
-        </div>
-        <!--ul data-role="actionsheet" class="singleCardActionsList" id="singleCardActions" data-popup='{"direction": "left"}'>
-            <li>
-                <a href="#" data-role="button" data-bind="events: { click : deleteCard }" class="singleCardDeleteButton">Delete</a>
-            </li>
-        </ul-->
-    </div>
+    </script>
+    
+        <script type="text/x-kendo-template" id="bolBinsTemplate">
+                <div class="bolTemplateView">
+                    <div style="display: inline-block; width:90%;">BinID: #: data #</div>
+                    <div style="display: inline-block;">[X]</div>
+                </div>
+        </script>
+    
+    
 </div>
