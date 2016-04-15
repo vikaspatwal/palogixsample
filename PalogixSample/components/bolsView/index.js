@@ -76,7 +76,6 @@ function loadBolList()
 
 function loadSingleBol(e)
 {
-    alert('load');
     var bolid = e.view.params.id; 
     var template = kendo.template($("#bolTemplate").html()); //create template
    
@@ -142,4 +141,26 @@ function loadBolBins(bolid)
     
 }
 
+function scanBins(bolid)
+{
+    
+ var that = this;
+        if (window.navigator.simulator === true) {
+            alert("Not Supported in Simulator.");
+        }
+        else {
+            cordova.plugins.barcodeScanner.scan(
+                function(result) {
+                    if (!result.cancelled) {
+                        //that._addMessageToLog(result.format + " | " + result.text);  
+                        //$('#bolbins').val(result.text);
+                        document.getElementById('bolbins').value = document.getElementById('bolbins').value + ',' + result.text;
+                        that._addMessageToLog(result.text);    
+                    }
+                }, 
+                function(error) {
+                    console.log("Scanning failed: " + error);
+                });
+        }   
+}
 // END_CUSTOM_CODE_contactsView
