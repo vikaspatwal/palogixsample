@@ -1,9 +1,8 @@
 'use strict';
 
-var serverURL = "http://palogix.stigasoft.biz/";
-    var accessToken = "";
-    var authString = "YXBpdXNlcjphcGlwYXNz";
-    var contentType = "application/json";
+var bolSource;
+var bolid="";
+var continuousScan=0;
 
 app.bolsView = kendo.observable({
     onShow: function() {loadBolList()}
@@ -12,73 +11,68 @@ app.bolsView = kendo.observable({
 app.singleBolView = kendo.observable({
 });
 
-app.bolBinsView = kendo.observable({
+app.scanView = kendo.observable({
+    onShow: function() {}
 });
 
-
-// START_CUSTOM_CODE_contactsView
+// START_CUSTOM_CODE_loginView
 // Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes
 (function () {
-   
-       var authSource = new kendo.data.DataSource({
-          transport: {
-            read:  {
-              url: serverURL + "api/doAuth",
-              type : "POST",
-              beforeSend: function (req) {
-                        req.setRequestHeader('Content-Type', contentType);
-                        req.setRequestHeader('Authorization', "Basic " + authString);
-                  }
-            },
-          },
-          schema : {
-            type: "json",
-            model: {
-                fields: {
-                    response_code: {type: "string" },
-                    msg: [
-                             { access_token : { type: "string" } }
-                         ]
-                }  
-            }
-          }
-        });
-        
-        authSource.fetch(function(){
-          var view = authSource.view();
-          accessToken = view[0].msg.access_token; // displays "Jane Doe"
-        });
-  
 })();
 
 
 function loadBolList()
 {
-     var bolSource = new kendo.data.DataSource({
-      transport: {
-        read:  {
-          url: serverURL + "api/getAllBol",
-          type : "GET",
-          beforeSend: function (req) {
-                    req.setRequestHeader('Content-Type', contentType);
-                    req.setRequestHeader('Authorization', "Bearer " + accessToken);
-              }
-        },
-      },
-      schema : {
-        data: "msg.data"
-      }
-    });
+    var bolSource = window.localStorage.getItem("bolListing");
     
-    app.bolsView.set('dataSource', bolSource);
+    if(bolSource == null)
+    {
+        bolSource = new kendo.data.DataSource({
+              transport: {
+                read:  {
+                  url: serverURL + "api/getAllBol",
+                  dataType : "json",
+                  type : "GET",
+                  beforeSend: function (req) {
+                            req.setRequestHeader('Content-Type', contentType);
+                            req.setRequestHeader('Authorization', "Bearer " + accessToken);
+                            req.setRequestHeader('dbSet', currentDB);
+                      }
+                },
+              },
+              schema : {
+                type: "json",
+                model: {
+                    fields: {
+                        response_code: {type: "string" }
+                    }  
+                }
+              },
+              error: function(e) {
+                    CheckResponse(e.xhr.status, "20001");
+              }
+         });
         
+        bolSource.fetch(function(){
+              var view = bolSource.view();
+              //var response_code = view[0].response_code; // displays "Jane Doe"
+            //console.log(view[0].response_code);
+            CheckResponse(view[0].response_code, "20002");
+            app.bolsView.set('dataSource', view[0].msg.data); 
+            window.localStorage.setItem("bolListing", view[0].msg.data);
+        });
+    }
+    else {
+        app.bolsView.set('dataSource', bolSource);
+    }
+    
 }
 
 function loadSingleBol(e)
 {
-    var bolid = e.view.params.id; 
+    bolid = e.view.params.id;
     var template = kendo.template($("#bolTemplate").html()); //create template
-   
+    
     var singleBolSource = new kendo.data.DataSource({
       transport: {
         read:  {
@@ -86,7 +80,8 @@ function loadSingleBol(e)
           type : "GET",
           beforeSend: function (req) {
                     req.setRequestHeader('Content-Type', contentType);
-                    req.setRequestHeader('Authorization', "Bearer " + accessToken);
+                     req.setRequestHeader('Authorization', "Bearer " + accessToken);
+                    req.setRequestHeader('dbSet', currentDB);
               }
         },
       },
@@ -96,28 +91,127 @@ function loadSingleBol(e)
         model: {
             fields: {
                 id: { field: "id", type: "string" },
-                status: { field: "status", type: "string" },
+                status_label: { field: "status_label", type: "string" },
                 from_biz_id: { field: "from_biz_id", type: "string" },
                 to_biz_id: { field: "to_biz_id", type: "string" },
                 out_date: { field: "out_date", type: "string" },
-                in_date: { field: "in_date", type: "string" }
+                in_date: { field: "in_date", type: "string" },
+                sender_company_name: { field: "sender_company_name", type: "string" },
+                receiver_company_name: { field: "receiver_company_name", type: "string" },
             }
         }
       },
       change: function() {
             $("#bolView").html(kendo.render(template, this.view())); // populate the content
+      },
+      error: function(e) {
+            CheckResponse(e.xhr.status, "20003");
       }
     });
-    
     singleBolSource.fetch();
-    loadBolBins(bolid);
+    //console.log(singleBolSource._data);
+    //loadBolBins(bolid);
+    
 }
+
+function redirectToScan(bolid)
+{
+    app.mobileApp.navigate("components/bolsView/scan.html?id=" + bolid);
+    //components/bolsView/scan.html?id=#:data.id#
+}
+
+
+
+
+/**************SCAN BOLS *******************/
+
+function loadAssetsList(e)
+{
+    bolid=e.view.params.id;
+    var dataSourceAsset = window.localStorage.getItem("Objects");
+    if(dataSourceAsset == null)
+    {
+         dataSourceAsset = new kendo.data.DataSource({
+          transport: {
+            read:  {
+              url: serverURL + "api/getAllObject",
+              type : "GET",
+              beforeSend: function (req) {
+                        req.setRequestHeader('Content-Type', contentType);
+                        req.setRequestHeader('Authorization', "Bearer " + accessToken);
+                        req.setRequestHeader('dbSet', currentDB);
+                  }
+            },
+          },
+          schema : {
+            type: "json",
+            data: "msg.data",
+            model: {
+                fields: {
+                    obj_id: { field: "obj_id", type: "number" },
+                    object_name: { field: "object_name", type: "string" }
+                }
+            }
+          },
+          error: function(e) {
+            CheckResponse(e.xhr.status, "20004");
+          }
+        });
+        //dataSourceAsset.read();
+    }
+    
+ //   alert(JSON.stringify(dataSourceAsset.data().toJSON));
+        dataSourceAsset.fetch(function(){
+           var data = dataSourceAsset.data();
+            var option = "<option value='0'>Select Asset</option>";
+             for (var i=0; i<data.length; i++) {
+                option += "<option value='"+data[i].obj_id+"'>"+data[i].object_name+"</option>";
+             }
+            $('#mySelect').html(option);
+        });
+    
+ 
+    var scanButton = document.getElementById("scanButton");
+    var that = this;
+    scanButton.addEventListener("click",
+                                    function() { 
+                                        scanBins(0); 
+                                    });
+    
+    var mySelect = document.getElementById("mySelect");
+    mySelect.addEventListener("change",
+                                    function() { 
+                                        loadBolObjectBins(bolid); 
+                                    });
+    
+    var btnUpdateBins = document.getElementById("btnUpdateBins");
+    btnUpdateBins.addEventListener("click",
+                                    function() { 
+                                        updateBolBins(bolid); 
+                                    });
+    
+    loadBolBins(bolid);
+    //alert(document.getElementsByClassName('km-view-title').innerHtml);
+    //$("#navbar").data("kendoMobileNavBar").title("SCAN ASSETS FOR " + bolid);
+}
+
+
+
+var scantemplate;
+var scannedBinDataSource; // = new kendo.data.DataSource();
+
+/*scannedBinDataSource.bind("change", function(e) { 
+    var html = kendo.render(scantemplate, this.view());
+    $("#bolBinView").html(html);
+  });
+*/
 
 function loadBolBins(bolid)
 {
-    var template = kendo.template($("#bolBinsTemplate").html()); //create template
-    
-    var bolSource = new kendo.data.DataSource({
+    //var template = kendo.template($("#bolBinsTemplate").html()); //create template
+     scantemplate = kendo.template($("#scantemplate").html());
+
+    scannedBinDataSource = new kendo.data.DataSource({
       transport: {
         read:  {
           url: serverURL + "api/getBolBinDetails/" + bolid,
@@ -125,6 +219,7 @@ function loadBolBins(bolid)
           beforeSend: function (req) {
                     req.setRequestHeader('Content-Type', contentType);
                     req.setRequestHeader('Authorization', "Bearer " + accessToken);
+                    req.setRequestHeader('dbSet', currentDB);
               }
         },
       },
@@ -133,18 +228,29 @@ function loadBolBins(bolid)
         data: "msg.data"
       },
       change: function() {
-            $("#bolBinView").html(kendo.render(template, this.view())); // populate the content
+            $("#bolBinView").html("<div class='rTable' style='width:100%'><div class='rTableHeading'><div class='rTableHead rTableHeadEdgeLeft'>Asset</div><div class='rTableHead'>BinID</div><div class='rTableHead rTableHeadEdgeRight'>&nbsp;</div></div><div class='rTableBody'>" + kendo.render(scantemplate, this.view()) + "</div></div>"); // populate the content
+            //$("#bolTitle").html('BOL ' + bolid);
       }
     });
-    bolSource.fetch();
+    scannedBinDataSource.fetch();
+    //console.log(bolSource);
 //    app.bolBinsView.set('dataSourceBolBin', bolSource);
     
 }
 
-function scanBins(bolid)
+
+function loadBolObjectBins(bolid)
 {
+    console.log(bolid);
+    console.log(document.getElementById("mySelect").value);
+}
+
+
+ 
+function scanBins(resetContinuousScan)
+{
+    continuousScan = resetContinuousScan;
     
- var that = this;
         if (window.navigator.simulator === true) {
             alert("Not Supported in Simulator.");
         }
@@ -152,15 +258,173 @@ function scanBins(bolid)
             cordova.plugins.barcodeScanner.scan(
                 function(result) {
                     if (!result.cancelled) {
-                        //that._addMessageToLog(result.format + " | " + result.text);  
-                        //$('#bolbins').val(result.text);
-                        document.getElementById('bolbins').value = document.getElementById('bolbins').value + ',' + result.text;
-                        that._addMessageToLog(result.text);    
+                        var newbinid = result.text;
+                        //$("#bolBinView").append("<div class='bolbinrow'>"+ result.text +"</div><div class='bolbindeleterow'>[X]</div>");
+                        //newbinids = newbinid + "," + newbinids;
+                        var obj_id = $('#mySelect').val();
+                        var obj_name;
+                        
+                        if (obj_id == 0)
+                            obj_name = "N/A";
+                        else
+                            obj_name = $('#mySelect option:selected').text();
+                        
+                        scannedBinDataSource.insert(0,{
+                          obj_id: obj_id,
+                          obj_name: obj_name,
+                          bin_id: newbinid
+                        });
+                        
+                       /*
+                        scannedBinDataSource.add({
+                          obj_id: $('#mySelect').val(),
+                          obj_name: $('#mySelect option:selected').text(),
+                          bin_id: newbinid
+                        });
+                        */
+                        if(continuousScan==1) {
+                            scanBins(1);
+                        }
+                        else
+                        {
+                             window.navigator.notification.confirm(
+                                "", // the message
+                                function( index ) {
+                                    switch ( index ) {
+                                        case 1:// The first button was pressed
+                                            break;
+                                        case 2:// The second button was pressed
+                                            scanBins(0);
+                                            break;
+                                        case 3:// The third button was pressed
+                                            scanBins(1);
+                                    }
+                                },
+                                "Scan another bin?", // a title
+                                [ "No", "Yes", "Yes, don't ask again" ]    // text of the buttons
+                            );
+                        }                        
                     }
                 }, 
                 function(error) {
+                    alert(error);
                     console.log("Scanning failed: " + error);
                 });
         }   
 }
-// END_CUSTOM_CODE_contactsView
+
+
+
+function updateBolBins(bolid)
+{
+    var jsonBolBinBody = new Object();
+    jsonBolBinBody.bolid = bolid;
+    jsonBolBinBody.binids = scannedBinDataSource.view();
+
+         var updateBolBinSource = new kendo.data.DataSource({
+          transport: {
+            read:  {
+              url: serverURL + "api/createBolBinDetails",
+              dataType : "json",
+              type : "POST",
+              data: jsonBolBinBody,
+              beforeSend: function (req) {
+                        req.setRequestHeader('Content-Type', contentType);
+                        req.setRequestHeader('Authorization', "Bearer " + accessToken);
+                        req.setRequestHeader('dbSet', currentDB);
+                  },
+            },
+            parameterMap: function(data, type) { 
+              return kendo.stringify(data);
+            }
+          },
+          schema : {
+            type: "json",
+            model: {
+                fields: {
+                    response_code: {type: "string" }
+                }  
+            }
+          },
+          error: function(e) {
+               CheckResponse(e.xhr.status, "20006");
+          }
+     });
+        
+    
+     updateBolBinSource.fetch(function(){
+          var view = updateBolBinSource.view();
+          //var response_code = view[0].response_code; // displays "Jane Doe"
+         var data = view[0].msg.data;
+         alert(data);
+         console.log(view);
+        });
+    
+    
+}
+
+function deleteBin(bolid, binid)
+{
+    var bolBinToDelete = new Object();
+    bolBinToDelete.bolid = bolid;
+    bolBinToDelete.binids = [binid];
+    
+    //console.log(kendo.stringify(bolBinToDelete));
+    //return;
+    
+    var deleteBolBinSource = new kendo.data.DataSource({
+          transport: {
+            read:  {
+              url: serverURL + "api/deleteBolBinDetails",
+              dataType : "json",
+              type : "DELETE",
+              data: bolBinToDelete,
+              beforeSend: function (req) {
+                        req.setRequestHeader('Content-Type', contentType);
+                        req.setRequestHeader('Authorization', "Bearer " + accessToken);
+                        req.setRequestHeader('dbSet', currentDB);
+                  },
+            },
+            parameterMap: function(data, type) { 
+              return kendo.stringify(data);
+            }
+          },
+          schema : {
+            type: "json",
+            model: {
+                fields: {
+                    response_code: {type: "string" }
+                }  
+            }
+          },
+          error: function(e) {
+               CheckResponse(e.xhr.status, "20005");
+          }
+     });
+     
+    
+     deleteBolBinSource.fetch(function(){
+          var view = deleteBolBinSource.view();
+          //var response_code = view[0].response_code; // displays "Jane Doe"
+         var data = view[0].msg.data;
+         console.log(view);
+        });
+    
+    var raw = scannedBinDataSource.data();
+    var length = raw.length;
+
+    // iterate and remove "done" items
+    var item, i;
+    for(i=0; i<=length; i++){
+      item = raw[i];
+      console.log(item.bin_id + " == " + binid);
+      if (item.bin_id == binid){
+        scannedBinDataSource.remove(item);
+          return;
+      }
+        
+    }
+        
+}
+
+// END_CUSTOM_CODE_loginView

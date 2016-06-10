@@ -3,9 +3,9 @@
   "views": [
     {
       "type": "kendo-ui-mobile:view",
-      "name": "homeView",
+      "name": "loginView",
       "components": [],
-      "title": "Home View",
+      "title": "Login View",
       "addToNavigation": true,
       "icon": "home"
     },
@@ -19,24 +19,16 @@
     },
     {
       "type": "kendo-ui-mobile:view",
-      "name": "settingsView",
+      "name": "bolSearchView",
       "components": [],
       "title": "Settings",
       "addToNavigation": true,
       "icon": "settings"
-    },
-    {
-      "type": "kendo-ui-mobile:view",
-      "name": "contactsView",
-      "components": [],
-      "title": "Contacts",
-      "addToNavigation": true,
-      "icon": "contacts"
     }
   ],
   "dataProviders": [],
   "name": "kendoUiMobileApp",
   "navigation": "drawer",
-  "view": "homeView",
+  "view": "loginView",
   "skin": "flat"
 }

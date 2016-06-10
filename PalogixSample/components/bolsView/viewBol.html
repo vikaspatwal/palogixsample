@@ -1,38 +1,49 @@
-<div id="singleBolView" data-layout="main" data-role="view" data-style="inset" data-title="BOL" data-show="loadSingleBol" data-model="app.singleBolView" >
-    <header data-role="header">
-        <div data-role="navbar">
-            <a class="nav-button" data-role="backbutton" data-align="left">Back</a>
-            <span data-role="view-title"></span>
-        </div>
-    </header>
-    
-    <div id="bolView"></div>
-    <div style="margin-top:5px">
-        <div style="font-weight:bold; display: inline-block; width:60%;">Bol Bins:</div> <div style="display: inline-block;">Add Bin | </div> <div style="display: inline-block;">Scan Bin</div>
-        <div id="bolBinView"></div>
+<div id="singleBolView" data-layout="main" data-role="view" data-style="inset" data-title="VIEW BOL" data-show="loadSingleBol" data-model="app.singleBolView">
+
+    <div id="container">
+        <div id="bolView" style="float:left; width:100%"></div>
     </div>
     
     <script type="text/x-kendo-template" id="bolTemplate">
-            <div class="bolTemplateView">
-                <div style="display: inline-block; width:50%;">Bol ID: #: data.id #</div>
-                <div style="display: inline-block;">Status: #: data.status #</div>
-             </div>
-            <div class="bolTemplateView">
-                <div style="display: inline-block; width:50%;">Fr: #: data.from_biz_id #</div>
-                <div style="display: inline-block;">To: #: data.to_biz_id #</div>
+            <div class="rTable rTableRound">
+		        <div class="rTableRow" style="width:100%;">
+                    <div class="rTableCell firstCellTitle" style="border-radius: 5px 0px 0px 0px;">BOL ID</div> <div class="rTableCell"> #: data.id #</div>
+                </div>
+                <div class="rTableRow" style="width:100%;">
+                    <div class="rTableCell firstCellTitle">Sender</div><div class="rTableCell">#: data.sender_company_name #</div>
+                </div>
+                <div class="rTableRow" style="width:100%;">
+                    <div class="rTableCell firstCellTitle">Receiver</div><div class="rTableCell">#: data.receiver_company_name #</div>
+                </div>
+                <div class="rTableRow" style="width:100%;">
+                    <div class="rTableCell firstCellTitle">Carrier</div><div class="rTableCell"> #: data.carrier_company_name #</div>
+                </div>
+                <div class="rTableRow" style="width:100%;">
+                    <div class="rTableCell firstCellTitle">Out/In Dates</div><div class="rTableCell"> #: data.out_date # - #: data.in_date #</div>
+                </div>
+                <div class="rTableRow" style="width:100%;">
+                    <div class="rTableCell firstCellTitle" style="border-radius: 0px 0px 0px 5px;">Status</div><div class="rTableCell"> #: data.status_label #</div>
+                </div>
             </div>
-            <div class="container-name">
-                <div style="display: inline-block; width:50%;">Out Dt: #: data.out_date #</div>
-                <div style="display: inline-block;">In Dt: #: data.in_date #</div>
+            <div class="bolTemplateView" style="line-height:10px;">&nbsp;<hr></div>
+            <div>
+                <div class="rTable" style="width:100%">
+                   <div class="rTableHeading">
+                        <div class="rTableHead rTableHeadEdgeLeft">Asset</div>
+                        <div class="rTableHead">Qty</div>
+                        <div class="rTableHead rTableHeadEdgeRight">Wt.</div>
+                   </div>
+                <div class="rTableBody">
+                    # for (var i = 0; i < data.bol_records.length; i++) { #
+                        <div class="rTableRow">
+                            <div class="rTableCell">#= data.bol_records[i].obj_name #</div><div class="rTableCell">#= data.bol_records[i].qty #</div><div class="rTableCell">#= data.bol_records[i].weight #</div>
+                        </div>
+                    # } #
+                </div>
+                </div>
+            </div>
+            <div class="divFooter">
+                <img src="images/ScanAsset.png" style="" onClick="redirectToScan(#: data.id #);" />
             </div>
     </script>
-    
-        <script type="text/x-kendo-template" id="bolBinsTemplate">
-                <div class="bolTemplateView">
-                    <div style="display: inline-block; width:90%;">#: data #</div>
-                    <div style="display: inline-block;">[X]</div>
-                </div>
-        </script>
-    
-    
 </div>

@@ -1,4 +1,11 @@
 'use strict';
+var serverURL = "http://palogix.stigasoft.biz/";
+var authString = "YXBpdXNlcjphcGlwYXNz";
+var contentType = "application/json";
+
+var accessToken="";
+var currentDB="";
+var isLoggedIn=false;
 
 (function() {
     var app = {
@@ -9,7 +16,7 @@
         $(function() {
             app.mobileApp = new kendo.mobile.Application(document.body, {
                 skin: 'flat',
-                initial: 'components/homeView/view.html'
+                initial: 'components/loginView/view.html'
             });
         });
     };
@@ -58,5 +65,42 @@
 
 // START_CUSTOM_CODE_kendoUiMobileApp
 // Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes
+
+function loadMenu()
+{  
+    if(window.localStorage.getItem("isLoggedIn")=="1")
+    {
+        document.getElementById('navigation-container').style.display = "inline";
+    }
+    else
+    {
+         document.getElementById('navigation-container').style.display = "none";
+    }
+    
+    
+}
+
+function CheckResponse(responseCode, errorNumber)
+{
+    if(responseCode == "200"){
+        return true;
+    }
+    else{
+     navigator.notification.alert("Due to technical difficulties your action cannot be completed at this time. Please try again. Error number: " + errorNumber);
+     window.localStorage.clear();
+     app.mobileApp.navigate("components/loginView/view.html?action=logout");
+     return false;
+    }    
+}
+
+function appAlert(errMsg, redirectToLogin)
+{
+    navigator.notification.alert(errMsg);
+    if(redirectToLogin=="1")
+    {
+        app.mobileApp.navigate("components/loginView/view.html?action=logout");
+        return false;
+    }
+}
 
 // END_CUSTOM_CODE_kendoUiMobileApp

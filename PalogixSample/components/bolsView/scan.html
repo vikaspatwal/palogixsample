@@ -1,0 +1,27 @@
+<div id="scanView" data-role="view" data-title="SCAN ASSETS" data-layout="main" data-model="app.scanView" data-show="loadAssetsList">
+    <!-- START_CUSTOM_CODE_loginView -->
+    <!-- Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes -->
+    <div style="100vr">
+        <div id="lblDescription">To scan new assets, choose Asset Type and tap 'Start Scanning' button.</div>
+        <div class="rTable" style="width:100%; border:0px;">
+            <div class="rTableRow">
+                <div class="rTableCell " style="width:50%; text-align:left;">
+                    <select id="mySelect"></select> 
+                </div>
+                <div class="rTableCell" style="width:50%; text-align:right;">
+                        <button class="button" id="scanButton">START SCANNING</button> 
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div id="bolBinView"></div>
+    </div>
+    <div class="divFooter"><button id="btnUpdateBins" class="button">SAVE</button></div>    
+    
+    <script id="scantemplate" type="text/x-kendo-template">
+        <div class="rTableRow">
+            <div class="rTableCell">#= obj_name #</div><div class="rTableCell">#= bin_id #</div><div class="rTableCell bolbindeleterow"><input type="image" id="deleteBin" src="images/Delete.png" onClick="deleteBin(#= bolid #, '#= bin_id #')" /></div>
+        </div>
+    </script>
+    <!-- END_CUSTOM_CODE_loginView -->
+</div>

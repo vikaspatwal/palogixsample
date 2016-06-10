@@ -1,0 +1,33 @@
+<div data-role="view" data-title="ATRAX US LOGIN" data-layout="main" data-model="app.loginView" data-show="app.loginView.onShow" data-after-show="app.loginView.afterShow">
+    <!-- START_CUSTOM_CODE_homeView -->
+    <!-- Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes -->
+    <header data-role="header">
+        <div data-role="navbar" id="navbar">
+          <span data-role="view-title"></span>
+          <input id="btnlogout" type="image" style="height:20px; width:20px;" data-align="left" src="images/logout.png" onClick="logout();" />
+        </div>
+    </header>
+    <div id="page-ui-login" data-role="page" data-add-back-btn="true" style="text-align: center;">
+        <div style="padding-top:5px;"><img src="images/atrax_logo.png" style="height:70%; width:70%;"/></div>
+        <div>
+            <input id="txtUsername" type="text" placeholder="Your username" style="width:100%;height:30px;margin-top:10px;border:1px solid rgb(0, 128, 192); padding-left:10px;"/>
+            <input id="txtPassword" type="password" placeholder="Password" style="width:100%;height:30px; margin-top:10px;border:1px solid rgb(0, 128, 192); padding-left:10px;" />
+            <input id="btnSubmit" class="button" type="button" onClick="login();" value="SIGN IN" style="width:100%;height:40px; margin-top:10px;"/>
+        </div>
+    </div>
+    
+    <div id="page-ui-dblisting" data-role="page" data-add-back-btn="true" style="display:none">
+        <div>
+            <ul data-role="listview" data-style="inset" data-template="dbListing" data-bind="source: dataSource"></ul>
+            <!-- this is the template used by the listview. template items are automatically wrapped in an <li> by Kendo UI Mobile -->
+            <script type="text/x-kendo-template" id="dbListing">
+                <a onClick="setCurrentDB('#: data.abrev #');">
+                    <div class="bolTemplateView">
+                        <div style="display: inline-block; width:50%;">#: data.name #</div>
+                     </div>
+                </a>
+            </script>
+        </div>
+    </div>
+    <!-- END_CUSTOM_CODE_homeView -->
+</div>
