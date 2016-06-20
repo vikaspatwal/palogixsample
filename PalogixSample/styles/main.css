@@ -310,7 +310,8 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
 }
 
 #btnUpdateBins{
-    width:100px;height:40px;
+   /* width:100%;height:30px;
+    background-color:red;*/
 }
 
 #scanButton{
@@ -356,6 +357,66 @@ hr {
 .lstViewBol{
     font-size:12px;
 }
+
+.noPadding{
+    padding:0px;
+}
+
+.noBorders{
+    border:0px;
+}
+
+.lblUnsavedScan{
+    font-size:12px;
+    color: #FF6600;
+    padding-bottom:10px;
+    width:100%;
+    text-align:center;
+}
+
+#currentDB{
+    font-size:10px;
+}
+
+#lblBolDescription{
+    font-weight:bold;
+    padding-bottom:10px;
+    width:100%; 
+    text-align: center;
+}
+
+.km-flat{
+      background-color:#fff;  
+}
+
+#bolBinView{
+   padding-top: 5px;
+}
+
+label {
+	font-size: 12px;
+	color: #4d4d4d;
+	cursor: pointer;
+	display: block;
+	font-weight: normal;
+	line-height: 1.5;
+	margin-bottom: 0;
+}
+
+.label-align input[type="checkbox"]{
+    margin:0px 0px 0px 0px; padding:0px;
+} 
+
+.label-align span{
+	margin: 0 0 20px 20px;
+	display: block;
+}
+
+.left{
+	float:left;
+}
+
+
 /************************* For Select Box ********************/
 
 /* END_CUSTOM_CODE_kendoUiMobileApp */

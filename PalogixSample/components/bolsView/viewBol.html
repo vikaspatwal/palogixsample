@@ -1,14 +1,10 @@
 <div id="singleBolView" data-layout="main" data-role="view" data-style="inset" data-title="VIEW BOL" data-show="loadSingleBol" data-model="app.singleBolView">
-
     <div id="container">
         <div id="bolView" style="float:left; width:100%"></div>
     </div>
     
     <script type="text/x-kendo-template" id="bolTemplate">
             <div class="rTable rTableRound">
-		        <div class="rTableRow" style="width:100%;">
-                    <div class="rTableCell firstCellTitle" style="border-radius: 5px 0px 0px 0px;">BOL ID</div> <div class="rTableCell"> #: data.id #</div>
-                </div>
                 <div class="rTableRow" style="width:100%;">
                     <div class="rTableCell firstCellTitle">Sender</div><div class="rTableCell">#: data.sender_company_name #</div>
                 </div>
@@ -28,22 +24,29 @@
             <div class="bolTemplateView" style="line-height:10px;">&nbsp;<hr></div>
             <div>
                 <div class="rTable" style="width:100%">
+                  #if(data.bol_records != undefined)
+                  {#
                    <div class="rTableHeading">
                         <div class="rTableHead rTableHeadEdgeLeft">Asset</div>
                         <div class="rTableHead">Qty</div>
                         <div class="rTableHead rTableHeadEdgeRight">Wt.</div>
                    </div>
-                <div class="rTableBody">
-                    # for (var i = 0; i < data.bol_records.length; i++) { #
-                        <div class="rTableRow">
-                            <div class="rTableCell">#= data.bol_records[i].obj_name #</div><div class="rTableCell">#= data.bol_records[i].qty #</div><div class="rTableCell">#= data.bol_records[i].weight #</div>
-                        </div>
-                    # } #
-                </div>
+                   <div class="rTableBody">
+                    #for (var i = 0; i < data.bol_records.length; i++) { #
+                            <div class="rTableRow">
+                                <div class="rTableCell">#= data.bol_records[i].obj_name #</div><div class="rTableCell">#= data.bol_records[i].qty #</div><div class="rTableCell">#= data.bol_records[i].weight #</div>
+                            </div>
+                    #}#
+                    </div>
+                  #} 
+                 else{#
+                      <center><div>No scans found.</div></center>
+                    #}#
                 </div>
             </div>
-            <div class="divFooter">
-                <img src="images/ScanAsset.png" style="" onClick="redirectToScan(#: data.id #);" />
+            <div>
+                <input id="btnScan" class="button" type="button" onClick="redirectToScan(#: data.id #);" value="ADD ASSETS" style="width:100%;height:40px; margin-top:10px;"/>
             </div>
+
     </script>
 </div>

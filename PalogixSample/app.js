@@ -5,6 +5,7 @@ var contentType = "application/json";
 
 var accessToken="";
 var currentDB="";
+var dbName="";
 var isLoggedIn=false;
 
 (function() {
@@ -93,9 +94,9 @@ function CheckResponse(responseCode, errorNumber)
     }    
 }
 
-function appAlert(errMsg, redirectToLogin)
+function appAlert(msg, redirectToLogin)
 {
-    navigator.notification.alert(errMsg);
+    navigator.notification.alert(msg);
     if(redirectToLogin=="1")
     {
         app.mobileApp.navigate("components/loginView/view.html?action=logout");
@@ -103,4 +104,23 @@ function appAlert(errMsg, redirectToLogin)
     }
 }
 
+function showLoader(){
+    app.mobileApp.showLoading();
+}
+
+function hideLoader(){
+    app.mobileApp.hideLoading();    
+}
+
+function changeTitle(title){
+    var navbar = app.mobileApp.view().header.find(".km-navbar").data("kendoMobileNavBar"); //app.application.view().header.find(".km-navbar").data("kendoMobileNavBar");         
+    navbar.title(title); 
+}
+
+function setCurrentDBName(){
+    //var navbar = app.mobileApp.view().header.find(".km-navbar").data("kendoMobileNavBar"); //app.application.view().header.find(".km-navbar").data("kendoMobileNavBar");         
+    //navbar.title(title);
+    document.getElementById("currentDB").innerHTML = dbName;
+ 
+}
 // END_CUSTOM_CODE_kendoUiMobileApp

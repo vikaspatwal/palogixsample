@@ -1,6 +1,13 @@
-<div data-role="view" data-title="Settings" data-layout="main" data-model="app.bolSearchView" data-show="app.bolSearchView.onShow" data-after-show="app.bolSearchView.afterShow">
+<div data-role="view" data-title="SEARCH BOL" data-layout="main" data-model="app.bolSearchView" data-show="app.bolSearchView.onShow" data-after-show="app.bolSearchView.afterShow">
     <!-- START_CUSTOM_CODE_bolSearchView -->
     <!-- Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes -->
-    <h1 data-bind="html: title"></h1>
+
+    <div id="page-ui-search" data-role="page" data-add-back-btn="true" style="text-align: center;">
+        <div style="padding-top:5px;">Enter BOL number to search</div>
+        <div>
+            <input id="txtBOL" type="number" style="width:100%;height:30px;margin-top:10px;border:1px solid rgb(0, 128, 192); padding-left:10px;"/>
+            <input id="btnSubmit" class="button" type="button" onClick="searchBOL();" value="SEARCH" style="width:100%;height:40px; margin-top:10px;"/>
+        </div>
+    </div>
     <!-- END_CUSTOM_CODE_bolSearchView -->
 </div>
