@@ -416,6 +416,23 @@ label {
 	float:left;
 }
 
+.textRight {
+    text-align:right;
+}
+
+.textLeft {
+    text-align:left;
+}
+
+.lblFade{
+    font-size: 12px;
+	color: lightGray;
+}
+
+[type="checkbox"]
+{
+    vertical-align:middle;
+}
 
 /************************* For Select Box ********************/
 

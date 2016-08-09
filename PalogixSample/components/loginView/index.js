@@ -80,7 +80,7 @@ function login()
     args.username = encodedUsername;
     args.password = encodedPassword;
     
-     var loginSource = new kendo.data.DataSource({
+     var loginSource = new kendo.data.DataSource({ 
           transport: {
             read:  {
               url: serverURL + "api/doLogin",
@@ -105,7 +105,7 @@ function login()
             }
           },
           error: function(e) {
-                  CheckResponse(e.xhr.status, "10003");
+               CheckResponse(e.xhr.status, "10003");
           }
      });
         
@@ -192,6 +192,11 @@ function logout()
     document.getElementById('page-ui-login').style.display = "inline";
     document.getElementById('page-ui-dblisting').style.display = "none";
     document.getElementById('btnlogout').style.display = "none";   
+    accessToken="";
+    currentDB="";
+    dbName="";
+    isLoggedIn=false;
+    hideLoader();
 }
 
 function rememberMe(username,password)

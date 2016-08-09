@@ -17,6 +17,7 @@ var isLoggedIn=false;
         $(function() {
             app.mobileApp = new kendo.mobile.Application(document.body, {
                 skin: 'flat',
+                layout: "tabstrip-layout",
                 initial: 'components/loginView/view.html'
             });
         });
@@ -87,8 +88,12 @@ function CheckResponse(responseCode, errorNumber)
         return true;
     }
     else{
-     navigator.notification.alert("Due to technical difficulties your action cannot be completed at this time. Please try again. Error number: " + errorNumber);
+     navigator.notification.alert("Due to technical difficulties your action cannot be completed at this time. Please try again. Response Code: "+ responseCode +". Error number: " + errorNumber);
      window.localStorage.clear();
+    accessToken="";
+    currentDB="";
+    dbName="";
+    isLoggedIn=false;
      app.mobileApp.navigate("components/loginView/view.html?action=logout");
      return false;
     }    

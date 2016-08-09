@@ -1,0 +1,16 @@
+<div data-role="view" data-title="Select Location" data-layout="main" data-model="app.locationView" data-show="loadLocationsList">
+        
+        <ul class="lstViewLocation" data-role="listview" data-style="inset" data-template="locationTemplate" data-bind="source: locationSource"></ul>
+        <!-- this is the template used by the listview. template items are automatically wrapped in an <li> by Kendo UI Mobile -->
+        <script type="text/x-kendo-template" id="locationTemplate">
+            <a onClick="setBolSource('loc_id', #: data.id #, '','#: data.name #','#: data.address1 # #: data.address2 #','#: data.city #, #: data.state #, #: data.zip #','','')">
+                    <div>
+                        <div style="display: inline-block; width:100%;">#: data.name #</div>
+                    </div>
+                    <div>
+                        <div style="display: inline-block; width:100%; font-size:10px;">#: data.address1 # #: data.address2 #</div>
+                        <div style="display: inline-block; width:100%; font-size:10px;">#: data.city # #: data.state #</div>
+                    </div>
+            </a>
+        </script>
+</div>

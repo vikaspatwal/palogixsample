@@ -1,0 +1,99 @@
+<div data-role="view" data-title="CREATE BOL" data-layout="main" data-model="app.createBolView" data-init="createBolInIt" data-show="app.createBolView.onShow">
+    <!-- START_CUSTOM_CODE_homeView -->
+    <!-- Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes -->
+    <div id="tab" style="border-bottom: 2px solid green;">
+        <div style="border:1px solid red; width:50%; padding:5px; display: inline-block; float: left;">
+              <a onClick="loadTab(1)">Specify Companies</a>
+        </div>
+        <div style="border:1px solid red; width:50%; padding:5px;display: inline-block;">
+              <a onClick="loadTab(2)">Specify BOL Details</a>
+        </div>
+    </div>
+    <div id="tabBody">
+        <div data-role="page" id="page-ui-addCompanies" style="text-align: center; display:inline;">
+            <div id="tblSender" class="rTable" style="width:100%; margin-top:10px;"  >
+                   <div class="rTableHeading" onClick="loadCompanies('sender');">
+                        <div class="rTableHead rTableHeadEdgeLeft textLeft">Sender</div>
+                        <div class="rTableHead rTableHeadEdgeRight textRight"></div>
+                   </div>
+                   <div class="rTableBody" onClick="loadCompanies('sender');">
+                        <div class="rTableRow"><div id="lblSenderCompany" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">Company</div></div>
+                        <div class="rTableRow"><div id="lblSenderLocation" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">Location</div></div>
+                        <div class="rTableRow"><div id="lblSenderAddress" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">Address</div></div>
+                        <div class="rTableRow"><div id="lblSenderCityStateZip" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">City/State/Zip</div></div>
+                        <div class="rTableRow"><div id="lblSenderContact" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">Contact</div></div>
+                    </div>
+                    <div class="rTableBody">
+                        <div class="rTableRow">
+                            <div class="rTableCell textLeft">Receipt: <input id="txtSenderReceipt" type="text" /></div>
+                            <div class="rTableCell textRight"><label> Signed <input id="chkSenderSigned" type="checkbox"></label></div>
+                        </div>
+                    </div>
+            </div>
+            <div id="tblReceiver" class="rTable" style="width:100%; margin-top:10px;" >
+                   <div class="rTableHeading" onClick="loadCompanies('receiver');">
+                        <div class="rTableHead rTableHeadEdgeLeft textLeft">Receiver</div>
+                        <div class="rTableHead rTableHeadEdgeRight textRight"></div>
+                   </div>
+                   <div class="rTableBody" onClick="loadCompanies('receiver');">
+                        <div class="rTableRow"><div id="lblReceiverCompany" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">Company</div></div>
+                        <div class="rTableRow"><div id="lblReceiverLocation" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">Location</div></div>
+                        <div class="rTableRow"><div id="lblReceiverAddress" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">Address</div></div>
+                        <div class="rTableRow"><div id="lblReceiverCityStateZip" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">City/State/Zip</div></div>
+                        <div class="rTableRow"><div id="lblReceiverContact" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">Contact</div></div>
+                    </div>
+                    <div class="rTableBody">
+                        <div class="rTableRow">
+                            <div class="rTableCell textLeft">Receipt: <input id="txtReceiverReceipt" type="text" /></div>
+                            <div class="rTableCell textRight"><label> Signed <input id="chkReceiverSigned" type="checkbox"></label></div>
+                        </div>
+                    </div>
+            </div>
+            <div id="tblCarrier" class="rTable" style="width:100%; margin-top:10px;">
+                   <div class="rTableHeading" onClick="loadCompanies('carrier');">
+                        <div class="rTableHead rTableHeadEdgeLeft textLeft">Carrier</div>
+                        <div class="rTableHead rTableHeadEdgeRight textRight"></div>
+                   </div>
+                   <div class="rTableBody" onClick="loadCompanies('carrier');">
+                        <div class="rTableRow"><div id="lblCarrierCompany" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">Company</div></div>
+                        <!--div class="rTableRow"><div id="lblCarrierLocation" class="rTableCell"></div><div class="rTableCell textRight lblFade">Location</div></div>
+                        <div class="rTableRow"><div id="lblCarrierAddress" class="rTableCell"></div><div class="rTableCell textRight lblFade">Address</div></div>
+                        <div class="rTableRow"><div id="lblCarrierCityStateZip" class="rTableCell"></div><div class="rTableCell textRight lblFade">City/State/Zip</div></div-->
+                        <div class="rTableRow"><div id="lblCarrierContact" class="rTableCell textLeft"></div><div class="rTableCell textRight lblFade">Contact</div></div>
+                    </div>
+                    <div class="rTableBody">
+                        <div class="rTableRow">
+                            <div class="rTableCell textLeft">Receipt: <input id="txtCarrierReceipt" type="text" /></div>
+                            <div class="rTableCell textRight"><label> Signed <input id="chkCarrierSigned" type="checkbox"></label></div>
+                        </div>
+                    </div>
+            </div>
+            <div id="tblInstructions" class="rTable" style="width:100%; margin-top:10px;">
+                   <div class="rTableHeading">
+                        <div class="rTableHead rTableHeadEdgeLeft textLeft">Special Instructions</div>
+                   </div>
+                   <div class="rTableBody">
+                        <div class="rTableRow">
+                            <div id="lblCarrierCompany" class="rTableCell">
+                                <textarea id="txtSpecialInstructions" style="width: 100%"></textarea> 
+                            </div>
+                        </div>
+                   </div>
+            </div>
+                   
+            
+            
+        </div>
+        
+        
+        <div data-role="page" id="page-ui-bolSummary" style="display:none;">
+            <div>
+               
+            </div>
+        </div>
+    </div>
+    
+    <!-- END_CUSTOM_CODE_homeView -->
+</div>
+
+    

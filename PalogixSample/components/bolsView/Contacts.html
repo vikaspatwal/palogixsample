@@ -1,0 +1,15 @@
+<div data-role="view" data-title="Select Contact" data-layout="main" data-model="app.contactView" data-show="loadContactsList">
+        
+        <ul class="lstViewContact" data-role="listview" data-style="inset" data-template="contactTemplate" data-bind="source: contactSource"></ul>
+        <!-- this is the template used by the listview. template items are automatically wrapped in an <li> by Kendo UI Mobile -->
+        <script type="text/x-kendo-template" id="contactTemplate">
+            <a onClick="setBolSource('contact_id', #: data.id #, '','','','','#: data.fname # #: data.lname #','#: data.info #');">
+                    <div>
+                        <div style="display: inline-block; width:100%;">#: data.fname # #: data.lname #</div>
+                    </div>
+                    <div>
+                        <div style="display: inline-block; width:100%; font-size:10px;">#: data.info #</div>
+                    </div>
+            </a>
+        </script>
+</div>

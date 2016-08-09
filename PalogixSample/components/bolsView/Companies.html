@@ -1,0 +1,12 @@
+<div data-role="view" data-title="Select Company" data-layout="main" data-model="app.companyView" data-show="loadCompanyList">
+        
+        <ul class="lstViewCompany" data-role="listview" data-style="inset" data-template="companyTemplate" data-bind="source: companySource"></ul>
+        <!-- this is the template used by the listview. template items are automatically wrapped in an <li> by Kendo UI Mobile -->
+        <script type="text/x-kendo-template" id="companyTemplate">
+            <a onClick="setBolSource('biz_id', #: data.company_id #, '#: data.company_name #','','','','','');">
+                <div class="bolTemplateView">
+                    <div style="display: inline-block; width:50%;">#: data.company_name #</div>
+                </div>
+            </a>
+        </script>
+</div>

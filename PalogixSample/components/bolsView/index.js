@@ -252,7 +252,25 @@ function loadBolBinsScan(e){
 }
 
 var scantemplate;
-var scannedBinDataSource; // = new kendo.data.DataSource();
+//var scannedBinDataSource; // = new kendo.data.DataSource();
+
+var scannedBinDataSource = kendo.data.Model.define({
+    fields: {
+        "obj_id": {
+            type: "number"
+        },
+        "obj_name": {
+            type: "string"
+        },
+        "bin_id": {
+            type: "string"
+        },
+        "action": {
+            type: "number"
+        }
+    }
+});
+
 
 /*scannedBinDataSource.bind("change", function(e) { 
     var html = kendo.render(scantemplate, this.view());
@@ -281,7 +299,15 @@ function loadBolBins(bolid)
       },
       schema : {
         type: "json",
-        data: "msg.data"
+        data: "msg.data",
+        model: {
+                fields: {
+                    obj_id: {type: "string"},
+                    obj_name: {type: "string"},
+                    bin_id: {type: "string"},
+                    action: {type: "string", value: "1"}
+                }
+            }
       },
       change: function() {
             $("#bolBinView").html("<div class='rTable' style='width:100%'><div class='rTableHeading'><div class='rTableHead rTableHeadEdgeLeft'>Asset</div><div class='rTableHead'>BinID</div><div class='rTableHead rTableHeadEdgeRight'>&nbsp;</div></div><div class='rTableBody'>" + kendo.render(scantemplate, this.view()) + "</div></div>"); // populate the content
@@ -290,13 +316,14 @@ function loadBolBins(bolid)
       }
     });
     scannedBinDataSource.fetch();
+    console.log(scannedBinDataSource);
     activateDeactivateActionButtons(0);
 }
 
 
 function loadBolObjectBins(bolid)
 {
-    console.log(bolid);
+    //console.log(bolid);
     console.log(document.getElementById("mySelect").value);
 }
 
@@ -321,14 +348,14 @@ function scanBins(resetContinuousScan)
             var dataFromList = scannedBinDataSource.data();
                 var alreadyExists = false;
                 for (var item in dataFromList) {
-                    if (dataFromList[item].bin_id == "autoscan1") {
+                    if (dataFromList[item].bin_id == "autoscan4") {
                       alreadyExists = true;
                       break;
                   }
                 }
             
             if(alreadyExists){
-                 appAlert("Error! Scanned BIN ID 'autoscan1' already exists.");
+                 appAlert("Error! Scanned BIN ID 'autoscan4' already exists.");
             }
             else{
                 unsavedScans = unsavedScans + 1;
@@ -338,7 +365,8 @@ function scanBins(resetContinuousScan)
                 scannedBinDataSource.insert(0,{
                           obj_id: obj_id,
                           obj_name: obj_name,
-                          bin_id: "autoscan1"
+                          bin_id: "autoscan4",
+                          action: "1"
                         });
 
                 activateDeactivateActionButtons(1);
@@ -389,7 +417,8 @@ function scanBins(resetContinuousScan)
                             scannedBinDataSource.insert(0,{
                               obj_id: obj_id,
                               obj_name: obj_name,
-                              bin_id: newbinid
+                              bin_id: newbinid,
+                              action: "1"
                             });
                             
                             unsavedScans ++;
@@ -440,6 +469,17 @@ function scanBins(resetContinuousScan)
 function updateBolBins(bolid)
 {
     showLoader();
+    
+    // SHOULD BE REVMOVED. 
+    var data=scannedBinDataSource.data();
+        for (var i=0; i<data.length; i++) {
+            var row = scannedBinDataSource.at(i);
+            if(row.action == undefined) {
+               row.action = "1";
+            }
+        }
+    data = null;
+    
     var jsonBolBinBody = new Object();
     jsonBolBinBody.bolid = bolid;
     jsonBolBinBody.binids = scannedBinDataSource.view();
